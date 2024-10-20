@@ -7,6 +7,7 @@ import dice4 from './assets/images/dice4.png'
 import dice5 from './assets/images/dice5.png'
 import dice6 from './assets/images/dice6.png'
 import Player from './components/Player'
+import Result from './components/Result'
 
 function App() {
 
@@ -20,11 +21,13 @@ function App() {
     ]
   
 
-  const [player1Name, setPlayer1Name] = useState("Player 1");
-  const [player2Name, setPlayer2Name] = useState("Player 2");
+
 
   const [diceImg1, setDice1] = useState(diceImg[0]);
   const [diceImg2, setDice2] = useState(diceImg[1]);
+  const [player1, setPlayer1] = useState("Player 1");
+  const [player2, setPlayer2] = useState("Player 2");
+  const [result, setResult] = useState("lets play");
 
   const rollDice = () => {
 
@@ -33,6 +36,8 @@ function App() {
     const iterations = totalTime / interval; // Kaç kere değişecek
 
     let count = 0; // Değişim sayacı
+    let finalRoll1 = 0; 
+    let finalRoll2 = 0;
 
     const changeDice = setInterval(() => {
       const roll1 = Math.floor(Math.random() * 6);
@@ -45,32 +50,51 @@ function App() {
       if (count === iterations) {
         clearInterval(changeDice); // Değişimi durdur
         // Son zar yüzlerini ayarla
-        setDice1(diceImg[Math.floor(Math.random() * 6)]);
-        setDice2(diceImg[Math.floor(Math.random() * 6)]);
+        finalRoll1 = Math.floor(Math.random() * 6);
+        finalRoll2 = Math.floor(Math.random() * 6);
+
+        setDice1(diceImg[finalRoll1]);
+        setDice2(diceImg[finalRoll2]);
+
+        if (finalRoll1 > finalRoll2) {
+          setResult(`${player1} wins!`);
+      } else if (finalRoll2 > finalRoll1) {
+          setResult(`${player2} wins!`);
+      } else {
+          setResult("It's a draw!");
+      }
       }
     }, interval);
-  }
+  };
+  
+  const editName = (playerSetter) => {
+    const playerNewName = prompt("What is your name?");
+    if (playerNewName.length < 1) {
+      alert("Please enter a valid name");
+    } else {
+      playerSetter(playerNewName);
+    }
+  };
 
   return (
     <>
     <div className="container">
-      <div className="result">Draw
-      </div>
-      
+      <Result resultGame={result}/>
       <div className="players">
         <Player 
-          name={player1Name} 
-          onChange={(e) => setPlayer1Name(e.target.value)} 
-          readOnly={false} // İlk oyuncu için degistirilebilir
+          playerName={player1}
+          playerX={player1}
+          showButton={true}
+          editName={() => editName(setPlayer1)}
           img={diceImg1} imgAlt={dice1}/>
         <Player 
-          name={player2Name} 
-          onChange={(e) => setPlayer2Name(e.target.value)} 
-          readOnly={true} // ikinci oyuncu için readOnly
-          img={diceImg2} imgAlt={dice2} inputStyle={{backgroundColor: 'transparent'}}/>
+          playerName={player2}
+          playerX={player2}
+          showButton={false}
+          img={diceImg2} imgAlt={dice2}/>
       </div>
       
-      <button onClick={rollDice}>Roll Dice</button>
+      <button className='roll-btn' onClick={rollDice}>Roll Dice</button>
       
     </div>
     </>
