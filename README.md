@@ -16,6 +16,7 @@ Dice Game is a simple application where users compete against each other by roll
 - **CSS**: For styling and layout
 - **JavaScript**: For functionality and logic
 
+Check out my project [here](https://dice-game-reactive.vercel.app/).
 
 
 ![github](/public/diceGameImg.png)
